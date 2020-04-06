@@ -441,7 +441,7 @@ Table.prototype.playerPostedSmallBlind = function() {
 		seat: this.public.activeSeat,
 		notification: 'Posted blind'
 	});
-	this.public.biggestBet = this.public.biggestBet < bet ? bet : this.public.biggestBet;
+	this.public.biggestBet = bet;
 	this.emitEvent( 'table-data', this.public );
 	this.initializeBigBlind();
 };
