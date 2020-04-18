@@ -269,7 +269,8 @@ Table.prototype.initializeSmallBlind = function() {
 	this.lastPlayerToAct = 10;
 
 	// Start asking players to post the small blind
-	this.seats[this.public.activeSeat].socket.emit('postSmallBlind');
+	//this.seats[this.public.activeSeat].socket.emit('postSmallBlind');
+	this.playerPostedSmallBlind();
 	this.emitEvent( 'table-data', this.public );
 };
 
@@ -346,10 +347,12 @@ Table.prototype.actionToNextPlayer = function() {
 
 	switch( this.public.phase ) {
 		case 'smallBlind':
-			this.seats[this.public.activeSeat].socket.emit( 'postSmallBlind' );
+			//this.seats[this.public.activeSeat].socket.emit( 'postSmallBlind' );
+			this.playerPostedSmallBlind();
 			break;
 		case 'bigBlind':
-			this.seats[this.public.activeSeat].socket.emit( 'postBigBlind' );
+			//this.seats[this.public.activeSeat].socket.emit( 'postBigBlind' );
+			this.playerPostedBigBlind();
 			break;
 		case 'preflop':
 			if( this.otherPlayersAreAllIn() ) {
@@ -639,7 +642,7 @@ Table.prototype.playerSatIn = function( seat ) {
  */
 Table.prototype.playerLeft = function( seat ) {
 	this.log({
-		message: this.seats[seat].public.name + ' left',
+		message: this.seats[seat].public.name + ' left - ' + this.seats[seat].public.chipsInPlay,
 		action: '',
 		seat: '',
 		notification: ''
