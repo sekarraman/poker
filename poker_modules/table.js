@@ -324,7 +324,7 @@ Table.prototype.initializeNextPhase = function() {
 	this.pot.addTableBets( this.seats );
 	this.public.biggestBet = 0;
 	this.public.activeSeat = this.findNextPlayer( this.public.dealerSeat );
-	this.lastPlayerToAct = this.findPreviousPlayer( this.public.activeSeat );
+	this.lastPlayerToAct = this.findPreviousPlayer( this.public.activeSeat, ['inHand', 'chipsInPlay'] );
 	this.emitEvent( 'table-data', this.public );
 
 	// If all other players are all in, there should be no actions. Move to the next round.
@@ -555,8 +555,8 @@ Table.prototype.playerBetted = function( amount ) {
 
 	this.emitEvent( 'table-data', this.public );
 
-	var previousPlayerSeat = this.findPreviousPlayer();
-	if( previousPlayerSeat === this.public.activeSeat ) {
+	var previousPlayerSeat = this.findPreviousPlayer(this.public.activeSeat, ['inHand', 'chipsInPlay']);
+	if( previousPlayerSeat == null || previousPlayerSeat === this.public.activeSeat ) {
 		this.endPhase();
 	} else {
 		this.lastPlayerToAct = previousPlayerSeat;
@@ -572,6 +572,7 @@ Table.prototype.playerRaised = function( amount ) {
 	var oldBiggestBet = this.public.biggestBet;
 	this.public.biggestBet = this.public.biggestBet < this.seats[this.public.activeSeat].public.bet ? this.seats[this.public.activeSeat].public.bet : this.public.biggestBet;
 	var raiseAmount = this.public.biggestBet - oldBiggestBet;
+
 	this.log({
 		message: this.seats[this.public.activeSeat].public.name + ' raised to ' + this.public.biggestBet,
 		action: 'raise',
@@ -580,8 +581,8 @@ Table.prototype.playerRaised = function( amount ) {
 	});
 	this.emitEvent( 'table-data', this.public );
 
-	var previousPlayerSeat = this.findPreviousPlayer();
-	if( previousPlayerSeat === this.public.activeSeat ) {
+	var previousPlayerSeat = this.findPreviousPlayer(this.public.activeSeat, ['inHand', 'chipsInPlay']);
+	if( previousPlayerSeat == null || previousPlayerSeat === this.public.activeSeat ) {
 		this.endPhase();
 	} else {
 		this.lastPlayerToAct = previousPlayerSeat;
@@ -730,7 +731,7 @@ Table.prototype.playerSatOut = function( seat, playerLeft ) {
 			}
 			// If the player was the last to act but not the player who should act
 			else if ( this.lastPlayerToAct === seat ) {
-				this.lastPlayerToAct = this.findPreviousPlayer( this.lastPlayerToAct );
+				this.lastPlayerToAct = this.findPreviousPlayer( this.lastPlayerToAct, ['inHand', 'chipsInPlay'] );
 			}
 		}
 	} else {
