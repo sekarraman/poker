@@ -1,15 +1,9 @@
 var express = require('express'),
         fs = require('fs'),
-//        options = {key: fs.readFileSync('/etc/letsencrypt/live/poker.goli.dev/privkey.pem'), 
-//                   cert: fs.readFileSync('/etc/letsencrypt/live/poker.goli.dev/fullchain.pem')},
+        options = {key: fs.readFileSync('server.key'), 
+                   cert: fs.readFileSync('server.cert')},
 	app = express(),
-//	server = require('https').createServer(options, app),
-    	pport = process.env.PORT || 3000,
-	server = app.listen(pport, function () {
-   		var host = server.address().address
-   		var port = server.address().port
-		console.log("Example app listening at http://%s:%s", host, port)
-		}),
+	server = require('https').createServer(options, app),
 	io = require('socket.io').listen(server),
 	lessMiddleware = require('less-middleware'),
 	path = require('path'),
@@ -34,9 +28,9 @@ var players = [];
 var tables = [];
 var eventEmitter = {};
 
-//var port = process.env.PORT || 3000;
-//server.listen(port);
-//console.log('Listening on port ' + port);
+var port = process.env.PORT || 3000;
+server.listen(port);
+console.log('Listening on port ' + port);
 
 // The lobby
 app.get('/', function( req, res ) {
