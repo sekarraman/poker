@@ -28,7 +28,7 @@ var players = [];
 var tables = [];
 var eventEmitter = {};
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 61243;
 server.listen(port);
 console.log('Listening on port ' + port);
 
